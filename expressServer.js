@@ -1,50 +1,20 @@
 const express = require("express"); //status 코드 알아서 처리 해줌
+const {
+  postUser,
+  getUser,
+  getUsers,
+} = require("./controllers/users.controller");
 const PORT = "3000";
 const app = express();
-const users = [
-  { id: 0, name: "seoyeun" },
-  { id: 1, name: "mun" },
-];
 
-// app.use((req, res, next) => {
-//   const start = Date.now();
-//   next();
-//   const diff = Date.now() - start;
-// });
 app.use(express.json());
-app.post("/users", (req, res) => {
-  const newUser = {
-    name: req.body.name,
-    id: users.length,
-  };
-  console.log(req.body.name);
-  users.push(newUser);
-  res.json(newUser);
-});
+app.post("/users", postUser);
 
-app.get("/users", (req, res, next) => {
-  res.send(users);
-  console.log("users에 접근");
-  next();
-});
+app.get("/users", getUsers);
 
-app.get("/users/:id", (req, res) => {
-  const param = req.params.id;
-  const query = req.query;
-  const user = users[param];
-  if (user) {
-    res.json(user.name);
-  } else {
-    res.sendStatus(400);
-  }
-});
+app.get("/user/:id", getUser);
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-  console.log(res.statusCode, "첫 페이지");
-});
-
-app.listen(PORT, (ans) => {});
+app.listen(PORT);
 
 // express : status code 자동으로 설정, 단 sendStatus로 바꿀 수 있는 듯함
 // response 의 Content Type header 설정하지 않아도 됨. 형식이 뭔지 자동으로 알려줌.
