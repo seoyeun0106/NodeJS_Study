@@ -5,6 +5,7 @@ function getUsers(req, res) {
 }
 
 function getUser(req, res) {
+  console.log(req.url);
   const param = req.params.id;
   const query = req.query;
   const user = users[param];

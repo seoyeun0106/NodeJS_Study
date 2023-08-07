@@ -1,18 +1,11 @@
 const express = require("express"); //status 코드 알아서 처리 해줌
-const {
-  postUser,
-  getUser,
-  getUsers,
-} = require("./controllers/users.controller");
-const { getPost } = require("./controllers/posts.controller");
+const usersRouter = require("./routes/users.router");
+const postsRouter = require("./routes/posts.router");
 const PORT = "3000";
 const app = express();
-
 app.use(express.json());
-app.post("/users", postUser);
-app.get("/posts", getPost);
-app.get("/users", getUsers);
-app.get("/user/:id", getUser);
+app.use("/users", usersRouter);
+app.use("/posts", postsRouter);
 app.listen(PORT);
 
 // express : status code 자동으로 설정, 단 sendStatus로 바꿀 수 있는 듯함
