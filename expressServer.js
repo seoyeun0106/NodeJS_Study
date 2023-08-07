@@ -4,16 +4,15 @@ const {
   getUser,
   getUsers,
 } = require("./controllers/users.controller");
+const { getPost } = require("./controllers/posts.controller");
 const PORT = "3000";
 const app = express();
 
 app.use(express.json());
 app.post("/users", postUser);
-
+app.get("/posts", getPost);
 app.get("/users", getUsers);
-
 app.get("/user/:id", getUser);
-
 app.listen(PORT);
 
 // express : status code 자동으로 설정, 단 sendStatus로 바꿀 수 있는 듯함
