@@ -4,7 +4,15 @@ const postsRouter = require("./routes/posts.router");
 const path = require("path");
 const PORT = "3000";
 const app = express();
-app.use("/image", express.static(path.join(__dirname, "public")));
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "views"));
+app.use("/static", express.static(path.join(__dirname, "public")));
+app.get("/", (req, res) => {
+  res.render("index", {
+    imageTitle: "먹고 싶은 게 넘 많아", //웹 동적 render
+  });
+});
+app.get;
 app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
