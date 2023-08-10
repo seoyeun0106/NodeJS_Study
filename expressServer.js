@@ -1,8 +1,10 @@
 const express = require("express"); //status 코드 알아서 처리 해줌
 const usersRouter = require("./routes/users.router");
 const postsRouter = require("./routes/posts.router");
+const path = require("path");
 const PORT = "3000";
 const app = express();
+app.use("/image", express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
