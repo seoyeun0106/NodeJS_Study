@@ -2,6 +2,7 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 const path = require("path");
+const User = require("./models/users.model");
 const app = express();
 app.use(express.json());
 // POST 로 들어온 form 값은 URL-encoded 형식으로 들어오고 객체로 변환해야한다.
@@ -17,14 +18,37 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 mongoose
-  .connect()
+  .connect(
+    `mongodb+srv://simple:1234@cluster0.tr2azyb.mongodb.net/?retryWrites=true&w=majority`
+  )
   .then(() => {
     console.log("mongoDB connected");
   })
   .catch((err) => {
     console.log(err);
   });
-
+app.get("/login", (req, res) => {
+  console.log("들어옴");
+  res.render("login");
+});
+app.get("/signup", (req, res) => {
+  res.render("signup");
+});
+app.post("/signup", async (req, res) => {
+  //user 객체를 생성합니다.
+  try {
+    const user = new User(req.body); //password랑 request 들어있는 body
+    // user 컬렉션에 유저를 저장합니다.
+    await user.save();
+    console.log(user, "저장되었습니다.");
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+app.post("/login", () => {});
 app.use("/static", express.static(path.join(__dirname, "public")));
 const port = 4000;
 app.listen(port, () => {
