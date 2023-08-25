@@ -18,9 +18,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 mongoose
-  .connect(
-    `mongodb+srv://simple:1234@cluster0.tr2azyb.mongodb.net/?retryWrites=true&w=majority`
-  )
+  .connect()
   .then(() => {
     console.log("mongoDB connected");
   })
