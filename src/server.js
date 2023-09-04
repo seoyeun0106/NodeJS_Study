@@ -3,6 +3,7 @@ const express = require("express");
 const { default: mongoose } = require("mongoose");
 const path = require("path");
 const User = require("./models/users.model");
+const passport = require("passport");
 const app = express();
 app.use(express.json());
 // POST 로 들어온 form 값은 URL-encoded 형식으로 들어오고 객체로 변환해야한다.
@@ -46,7 +47,21 @@ app.post("/signup", async (req, res) => {
     console.error(err);
   }
 });
-app.post("/login", () => {});
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.json({ msg: info });
+    }
+    req.logIn(user, function (err) {
+      if (err) {
+        return next(err);
+      }
+    });
+  });
+});
 app.use("/static", express.static(path.join(__dirname, "public")));
 const port = 4000;
 app.listen(port, () => {
