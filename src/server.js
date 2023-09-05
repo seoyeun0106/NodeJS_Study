@@ -4,8 +4,19 @@ const { default: mongoose } = require("mongoose");
 const path = require("path");
 const User = require("./models/users.model");
 const passport = require("passport");
+const cookieSession = require("cookie-session");
 const app = express();
+const cookieEncryptionKey = ["supersecret-key"];
+app.use(
+  // 쿠키이름 기본 값은 express:sess
+  cookieSession({
+    keys: [cookieEncryptionKey],
+  })
+);
 app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session());
+require("./config/passport");
 // POST 로 들어온 form 값은 URL-encoded 형식으로 들어오고 객체로 변환해야한다.
 // 객체로 변환할 때 중첩 객체를 허용하느냐 마느냐 ! //근데 오 ㅐ허용 안 해?????
 // default 값을 사용하지 않는 이유?
@@ -60,7 +71,7 @@ app.post("/login", (req, res, next) => {
         return next(err);
       }
     });
-  });
+  })(req, res, next);
 });
 app.use("/static", express.static(path.join(__dirname, "public")));
 const port = 4000;
