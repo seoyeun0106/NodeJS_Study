@@ -10,6 +10,7 @@ const cookieEncryptionKey = ["supersecret-key"];
 app.use(
   // 쿠키이름 기본 값은 express:sess
   cookieSession({
+    name: "udonthavetoknow",
     keys: [cookieEncryptionKey],
   })
 );
@@ -30,13 +31,19 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 mongoose
-  .connect()
+  .connect(
+    `mongodb+srv://simple:1234@cluster0.tr2azyb.mongodb.net/?retryWrites=true&w=majority`
+  )
   .then(() => {
     console.log("mongoDB connected");
   })
   .catch((err) => {
     console.log(err);
   });
+
+app.get("/", (req, res) => {
+  res.render("index");
+});
 app.get("/login", (req, res) => {
   console.log("들어옴");
   res.render("login");
@@ -67,9 +74,18 @@ app.post("/login", (req, res, next) => {
       return res.json({ msg: info });
     }
     req.logIn(user, function (err) {
+      console.log(req.user, "유저 값");
+      //       {
+      //   _id: new ObjectId("64f537b42a81edfdf3fe4787"),
+      //   email: 'abc@abc.com',
+      //   password: '12345',
+      //   __v: 0
+      // }
+      console.log(req.session, "세션 값");
       if (err) {
         return next(err);
       }
+      res.redirect("/");
     });
   })(req, res, next);
 });
